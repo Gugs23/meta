@@ -7,6 +7,9 @@ using std::string;
 #include <fstream>
 using std::fstream;
 
+#include <utility>
+using std::pair;
+
 #include "Instance.hpp"
 
 

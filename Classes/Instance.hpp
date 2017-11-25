@@ -4,6 +4,9 @@
 #include <string>
 using std::string;
 
+#include <utility>
+using std::pair;
+
 class MetaParser;
 
 class Instance{
@@ -27,6 +30,8 @@ class Instance{
         static int edgeDesc;
 
         static string instanceName;
+
+        static pair<double, double> * custoArestas;
 
 };
 
