@@ -9,9 +9,11 @@ class Dupla{
 
         double custo;
 
+        int index;
+
         bool operator < (const Dupla &) const;
 
-        Dupla(int = -1, double = 0);
+        Dupla(int = -1, double = 0, int = -1);
 
     private:
     

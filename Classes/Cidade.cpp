@@ -1,7 +1,7 @@
 #include "Cidade.hpp"
 
-Cidade::Cidade () {
-	desembarques;
+Cidade::Cidade (int cid) {
+	id = cid;
 	entrou = false;
 	passageiro = -1;
 }

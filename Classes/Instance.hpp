@@ -39,8 +39,11 @@ class Instance{
         
         Instance();
 
+        Instance localSearch();
+
         static void printBase();
-		
+        
+        void printRota();
 
 
     private:

@@ -13,7 +13,7 @@ class Cidade {
 		int passageiro;
 	
 	public:
-		Cidade();
+		Cidade(int = -1);
 		int getId();
 		void setId(int);
 		int getPassageiro();

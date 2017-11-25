@@ -1,6 +1,6 @@
 #include "Dupla.hpp"
 
-Dupla::Dupla(int cid, double ccusto) : id(cid), custo(ccusto){
+Dupla::Dupla(int cid, double ccusto, int cindex) : id(cid), custo(ccusto), index(cindex){
 
 }
 

@@ -7,8 +7,6 @@ Instance MetaParser::getInstance(string &name){
         cout << "Impossível abrir arquivo " << name << endl;
         throw 1;
     }
-    
-    Instance input;
 
     double desc;
     int v1, v2;
@@ -40,7 +38,7 @@ Instance MetaParser::getInstance(string &name){
     }
 
     for(int i = 0; i < Instance::vertices; i++){
-        Instance::cidades.push_back(Cidade());
+        Instance::cidades.push_back(Cidade(i));
     }
 
     for(int i = 0; i < Instance::numPass; i++){
@@ -50,6 +48,8 @@ Instance MetaParser::getInstance(string &name){
     }
 
     Instance::custoArestas = mat;
+
+    Instance input;
 
     return input;
 }
