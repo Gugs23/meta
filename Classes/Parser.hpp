@@ -12,6 +12,9 @@ using std::pair;
 
 #include "Instance.hpp"
 
+#include "Passageiro.hpp"
+
+#include "Cidade.hpp"
 
 class MetaParser{
     public:
