@@ -10,26 +10,26 @@ Passageiro::Passageiro(double tarifa, int embarque, int desembarque) {
 	this.desembarque = desembarque;
 }
 
-double getTarifa() {
+double Passageiro::getTarifa() {
 	return tarifa;
 }
 
-void setTarifa(double tarifa) {
+void Passageiro::setTarifa(double tarifa) {
 	this.tarifa = tarifa;
 }
 
-int getEmbarque() {
+int Passageiro::getEmbarque() {
 	return embarque;
 }
 
-int setEmbarque(int embarque) {
+int Passageiro::setEmbarque(int embarque) {
 	this.embarque = embarque;
 }
 
-int getDesembarque() {
+int Passageiro::getDesembarque() {
 	return embarque;
 }
 
-int setDesembarque(int desembarque) {
+int Passageiro::setDesembarque(int desembarque) {
 	this.desembarque = desembarque;
 }
