@@ -9,7 +9,7 @@ class Dupla{
 
         double custo;
 
-        bool operator < (const Dupla &);
+        bool operator < (const Dupla &) const;
 
         Dupla(int = -1, double = 0);
 

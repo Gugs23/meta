@@ -17,7 +17,21 @@ vector<Passageiro> Instance::passageiros;
 vector<Cidade> Instance::cidades;
 
 Instance::Instance(){
-    
+    vector<Cidade> listaCidades = cidades;	
+	int atual = listaCidades[0].getId();
+	rota.push_back(listaCidades[atual]);
+	listaCidades.erase(listaCidades.begin() + atual);
+	while(rota.size() < vertices) {
+		vector<Dupla> aux;
+		for(int i = 0; i < listaCidades.size(); i++){
+			aux.push_back(Dupla(listaCidades[i].getId(), custoArestas[listaCidades[i].getId()][atual].first));
+		}
+		sort(aux.begin(), aux.end());
+		int random = rand()%3;
+		atual = aux[random].id;
+		rota.push_back(listaCidades[atual]);
+		listaCidades.erase(listaCidades.begin() + atual);
+	}
 }
 
 void Instance::printBase(){

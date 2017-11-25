@@ -7,6 +7,10 @@ using std::cin;
 using std::endl;
 using std::fixed;
 
+
+#include <algorithm>
+
+
 #include <iomanip>
 using std::setprecision;
 
@@ -36,6 +40,7 @@ class Instance{
         Instance();
 
         static void printBase();
+		
 
 
     private:
