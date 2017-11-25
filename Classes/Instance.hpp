@@ -23,6 +23,8 @@ using std::pair;
 
 #include "Passageiro.hpp"
 
+#include "Dupla.hpp"
+
 class MetaParser;
 
 class Instance{
