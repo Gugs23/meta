@@ -15,8 +15,6 @@ class MetaParser{
     
         static Instance getInstance(string &name);
 
-    private:
-        MetaParser(string &);
 };
 
 #endif

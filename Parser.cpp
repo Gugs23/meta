@@ -1,8 +1,8 @@
 #include "Parser.hpp"
 
-MetaParser::MetaParser(string &s){
-    fstream arq(s.c_str());
-    int vertices, passageiros, capacidade, edgeDesc;
+Instance MetaParser::getInstance(string &name){
+    fstream arq(name.c_str());
+    Instance input();
 
-    arq >> vertices >> passageiros >> capacidade >> edgeDesc;
+    arq >> Instance::vertices;   
 }
