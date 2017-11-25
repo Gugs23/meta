@@ -14,8 +14,9 @@ class Passageiro {
 		double getTarifa();
 		void setTarifa(double);
 		int getEmbarque();
+		int getDesembarque();
 		void setEmbarque(int);
-		void setEmbarque(int);
+		void setDesembarque(int);
 };
 
 #endif

@@ -16,6 +16,10 @@ vector<Passageiro> Instance::passageiros;
 
 vector<Cidade> Instance::cidades;
 
+Instance::Instance(){
+    
+}
+
 void Instance::printBase(){
     cout << "Numero de Vertices " << vertices << endl;
     cout << "Numero de Passagerios " << numPass << endl;

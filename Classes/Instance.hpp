@@ -35,6 +35,7 @@ class Instance{
         
         Instance();
 
+        static void printBase();
 
 
     private:
@@ -56,8 +57,6 @@ class Instance{
         static vector<Cidade> cidades;
 
         static vector<Passageiro> passageiros;
-
-        static void printBase();
 
 };
 

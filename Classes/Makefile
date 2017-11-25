@@ -1,14 +1,14 @@
 OPT = -g
 
-DEPN = Parser.o Instance.o Passageiro.o Cidade.o
+DEPN = Parser.o Instance.o Passageiro.o Cidade.o Dupla.o
 
 Compile: Main
 
 Main: Main.cpp $(DEPN)
-	$(GXX) $(OPT) -o Main Main.cpp $(DEPN)
+	$(CXX) $(OPT) -o Main Main.cpp $(DEPN)
 
 %.o: %.cpp %.hpp
-	$(GXX) $(OPT) -c $<
+	$(CXX) $(OPT) -c $<
 
 clear:
 	rm *.o Main

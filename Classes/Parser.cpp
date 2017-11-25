@@ -2,6 +2,12 @@
 
 Instance MetaParser::getInstance(string &name){
     fstream arq(name.c_str());
+
+    if(arq.fail()){
+        cout << "Impossível abrir arquivo " << name << endl;
+        throw 1;
+    }
+    
     Instance input;
 
     double desc;

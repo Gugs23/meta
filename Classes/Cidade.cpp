@@ -1,17 +1,17 @@
 #include "Cidade.hpp"
 
 Cidade::Cidade () {
-	desembarques = new vector<int>();
+	desembarques;
 	entrou = false;
 	passageiro = -1;
 }
 
-int getId() {
+int Cidade::getId() {
 	return id;
 }
 
-void setId(int id) {
-	this.id = id;
+void Cidade::setId(int id) {
+	this->id = id;
 }
 
 int Cidade::getPassageiro() {
@@ -19,9 +19,9 @@ int Cidade::getPassageiro() {
 }
 
 void Cidade::setPassageiro(int passageiro) {
-	this.passageiro = passageiro;
+	this->passageiro = passageiro;
 }
 
-void Cidade::pegaPassageiro(int passageiro) {
-	this.entrou = true;
+void Cidade::pegaPassageiro() {
+	this->entrou = true;
 }

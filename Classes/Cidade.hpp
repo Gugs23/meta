@@ -2,11 +2,12 @@
 #define CIDADE_H
 
 #include <vector>
+using std::vector;
 
 class Cidade {
 
 	private:
-		int id
+		int id;
 		vector<int> desembarques;
 		bool entrou;
 		int passageiro;
