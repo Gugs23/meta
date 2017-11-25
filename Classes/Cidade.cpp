@@ -6,6 +6,14 @@ Cidade::Cidade () {
 	passageiro = -1;
 }
 
+int getId() {
+	return id;
+}
+
+void setId(int id) {
+	this.id = id;
+}
+
 int Cidade::getPassageiro() {
 	return passageiro;
 }
