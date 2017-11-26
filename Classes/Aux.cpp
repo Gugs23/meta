@@ -19,6 +19,16 @@ Instance Instance::localSearch(){
             j2 = rota[j + 1].getId();
             atual = value - custoArestas[i1][i2] - custoArestas[j1][j2];
             atual += custoArestas[i1][j1] + custoArestas[i2][j2];
+
+            if(atual < melhor){
+                melhor = atual;
+                best.first = i;
+                best.second = j;
+            }
         }
+    }
+
+    if(best.first != -1 && best.second != -1){
+        vector<Cidade> inicio = 
     }
 }
