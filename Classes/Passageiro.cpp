@@ -4,10 +4,19 @@ Passageiro::Passageiro() {
 
 }
 
-Passageiro::Passageiro(double tarifa, int embarque, int desembarque) {
+Passageiro::Passageiro(int id, double tarifa, int embarque, int desembarque) {
+	this->id = id;
 	this->tarifa = tarifa;
 	this->embarque = embarque;
 	this->desembarque = desembarque;
+}
+
+int Passageiro::getId(){
+	return id;
+}
+
+void Passageiro::setId(int id){
+	this->id = id;
 }
 
 double Passageiro::getTarifa() {

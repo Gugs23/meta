@@ -4,13 +4,16 @@
 class Passageiro {
 
 	private:
+		int id;
 		double tarifa;
 		int embarque;
 		int desembarque;
 	
 	public:
 		Passageiro();
-		Passageiro(double, int, int);
+		Passageiro(int, double, int, int);
+		int getId();
+		void setId(int);
 		double getTarifa();
 		void setTarifa(double);
 		int getEmbarque();

@@ -43,7 +43,7 @@ Instance MetaParser::getInstance(string &name){
 
     for(int i = 0; i < Instance::numPass; i++){
         arq >> desc >> v1 >> v2;
-        Instance::passageiros.push_back(Passageiro(desc, v1, v2));
+        Instance::passageiros.push_back(Passageiro(i+1, desc, v1, v2));
         Instance::cidades[v1].setPassageiro(i);
     }
 

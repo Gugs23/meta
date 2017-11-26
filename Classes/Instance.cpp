@@ -85,9 +85,14 @@ Instance Instance::localSearch(){
     return anterior;
 }
 
-vector<Passageiro> Instance::darwin() {
+bool* Instance::darwin() {
 	vector<Passageiro> l;
-	vector<Passageiro> candidatos;
+	bool * candidatos = new bool[numPass];
+	
+	for(int i = 0; i < numPass; i++) {
+		candidatos[i] = false;
+	}
+	
 	for(int i = 0; i < rota.size(); i++) {
 		Cidade c = rota[i];
 		vector<int> deletor;		
@@ -97,7 +102,7 @@ vector<Passageiro> Instance::darwin() {
 				deletor.push_back(j);
 			} else if(c.getId() == l[j].getDesembarque()) {
 				deletor.push_back(j);
-				candidatos.push_back(passageiros[l[j].getEmbarque()]);
+				candidatos[l[j].getId()-1] = true;
 			}
 		}
 		while(deletor.size() > 0) {
@@ -107,7 +112,57 @@ vector<Passageiro> Instance::darwin() {
 		Passageiro p = passageiros[c.getPassageiro()];
 		l.push_back(p);	
 	}
+	
+	for(int i = 0; i < numPass; i++) {
+		cout << candidatos[i] << " ";
+	}
+	
 	return candidatos;
+}
+
+void Instance::incluirPassageiros() {
+	bool * candidatos = darwin();
+	vector<Passageiro> auxiliar = passageiros;
+	vector<Passageiro> carro;
+	int index = 0;
+	incluirPassageiros(candidatos,&auxiliar, index, &carro);
+	delete candidatos;
+}
+
+void Instance::incluirPassageiros(bool * candidatos, vector<Passageiro> * auxiliar, int index, vector<Passageiro> * carro) {
+	if(index == rota.size()) {
+		return;
+	}
+	for(int i = 0; i < tripulacao.size(); i++) {
+		tripulacao[i].setTarifa(tripulacao[i].getTarifa() - (custoArestas[rota[index].getId()][rota[index-1].getId()].first)/tripulacao.size());
+		if(tripulacao[i].getTarifa()<0) {
+			reconstruirTripulacao(index, tripulacao[i].getEmbarque());
+			incluirPassageiros(candidatos, auxiliar, tripulacao[i].getEmbarque()+1);
+			return;
+		}
+		if(tripulacao[i].getDesembarque() == rota[index].getId()) {
+			tripulacao.erase(tripulacao.begin() + i);
+		}
+	}
+	if (candidatos[cidades[index].getPassageiro()] && carro.size() < lotacao) {
+		carro.push_back(auxiliar[cidades[index].getPassageiro()]);
+		lotacao++;
+	}
+	incluirPassageiros(candidatos, auxiliar, index+1);
+}
+
+void Instance::reconstruirTripulacao(int pontoDeErro, int pontoDeReconstrucao) {
+	for(int i = pontoDeErro; i > pontoDeReconstrucao; i--) {
+		int qtdPassageiros = tripulacao.size();
+		for(int j = 0; j < tripulacao.size(); j++) {
+			tripulacao[j].setTarifa(tripulacao[j].getTarifa() + (custoArestas[rota[i].getId()][rota[i-1].getId()].first)/qtdPassageiros);
+			if (tripulacao[j].getEmbarque() == rota[i].getId()) {
+				tripulacao.erase(tripulacao.begin() + j);
+				j--;
+			}			
+		}
+	}
+	tripulacao.erase(tripulacao.end() -1);
 }
 
 void Instance::printRota(){
@@ -121,6 +176,15 @@ void Instance::printRota(){
 
     cout << "Custo: " << soma << endl;
     cout << "Tamanho: " << rota.size() << endl;
+	
+	printTripulacao();
+}
+
+void Instance::printTripulacao(){
+	cout << "Passageiros" << endl;
+    for(int i = 0; i < tripulacao.size(); i++){
+        cout << tripulacao[i].getId() << " ";
+    }
 }
 
 void Instance::printBase(){
