@@ -85,6 +85,31 @@ Instance Instance::localSearch(){
     return anterior;
 }
 
+vector<Passageiro> Instance::darwin() {
+	vector<Passageiro> l;
+	vector<Passageiro> candidatos;
+	for(int i = 0; i < rota.size(); i++) {
+		Cidade c = rota[i];
+		vector<int> deletor;		
+		for(int j = 0; j < l.size(); j++) {	
+			l[j].setTarifa(l[j].getTarifa() - (custoArestas[rota[i].getId()][rota[i-1].getId()].first)/4);
+			if(l[j].getTarifa() < 0) {
+				deletor.push_back(j);
+			} else if(c.getId() == l[j].getDesembarque()) {
+				deletor.push_back(j);
+				candidatos.push_back(passageiros[l[j].getEmbarque()]);
+			}
+		}
+		while(deletor.size() > 0) {
+			l.erase(l.begin() + deletor[deletor.size()-1]);
+			deletor.erase(deletor.end()-1);
+		}
+		Passageiro p = passageiros[c.getPassageiro()];
+		l.push_back(p);	
+	}
+	return candidatos;
+}
+
 void Instance::printRota(){
     double soma = 0;
     for(int i = 0; i < rota.size() - 1; i++){

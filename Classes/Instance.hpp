@@ -40,6 +40,8 @@ class Instance{
         Instance();
 
         Instance localSearch();
+		
+		vector<Passageiro> darwin();
 
         static void printBase();
         
