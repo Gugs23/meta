@@ -40,15 +40,25 @@ class Instance{
         Instance();
 
         Instance localSearch();
+		
+		bool* darwin();
+		
+		void incluirPassageiros();
+		
+		void incluirPassageiros(bool*, vector<Passageiro> *, int);
 
         static void printBase();
         
         void printRota();
+		
+        void printTripulacao();
 
 
     private:
 
         vector<Cidade> rota;
+		
+        vector<Passageiro> tripulacao;
 
         static int vertices;
 
@@ -65,6 +75,8 @@ class Instance{
         static vector<Cidade> cidades;
 
         static vector<Passageiro> passageiros;
+		
+		void reconstruirTripulacao(int, int);
 
 };
 

@@ -22,6 +22,9 @@ int main(){
 
     cout << endl << endl << " Nova " << endl << endl;
     inicio.printRota();
+	
+	cout << endl << endl << "Passageiros possiveis: " << endl << endl;
+	bool* passageiros = inicio.darwin();
 
     return 0;
 }
