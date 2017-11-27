@@ -8,23 +8,26 @@ using namespace std;
 
 #include "Parser.hpp"
 
-int main(){
+int main(int argc, char * argv[]){
     srand(time(NULL));
-    string name = "../instancias/pcv_cal-50-classe_10-instancia_21.txt";
+    string name = argv[1];
+    name = "instancias/" + name;
+
+    //cout << "Exec request " << name << endl;
+    
+   double start_clock = clock();
+
     Instance inicio = MetaParser::getInstance(name);
 
-    inicio.printRota();
-    Instance anterior = inicio.localSearch();
+    
+    double valor, valor2;
+    Instance solucao = inicio.GRASP(valor);
 
-    cout << "Apos LS " << endl;
-    cout << "Velha " << endl << endl;
-    anterior.printRota();
+    //Instance solucao2 = inicio.GRASPRef(valor2);
 
-    cout << endl << endl << " Nova " << endl << endl;
-    inicio.printRota();
-	
-	cout << endl << endl << "Passageiros possiveis: " << endl << endl;
-	bool* passageiros = inicio.darwin();
+    double end_clock = clock();
+
+    cout << valor << " " << (end_clock - start_clock) / (double (CLOCKS_PER_SEC)) << endl;
 
     return 0;
 }

@@ -20,6 +20,7 @@ Instance::Instance(){
     vector<Cidade> listaCidades = cidades;	
     int index = 0;
 	int atual = listaCidades[0].getId();
+	int mod = vertices / 5;
 	rota.push_back(listaCidades[index]);
 	listaCidades.erase(listaCidades.begin() + index);
 	while(rota.size() < vertices) {
@@ -28,16 +29,37 @@ Instance::Instance(){
 			aux.push_back(Dupla(listaCidades[i].getId(), custoArestas[listaCidades[i].getId()][atual].first, i));
 		}
 		sort(aux.begin(), aux.end());
-		int random = rand()%3;
+		mod = __MIN(mod, aux.size());
+		int random = rand() % mod;
 		atual = aux[random].id;
 		rota.push_back(listaCidades[aux[random].index]);
 		listaCidades.erase(listaCidades.begin() + aux[random].index);
 	}
+	rota.push_back(cidades[0]);
 }
 
-Instance Instance::localSearch(){
-    Instance anterior = *this;
+Instance Instance::__switch(int ini, int fim){
+	vector<Cidade> novaRota;
 
+	for(int i = 0; i <= ini; i++){
+		novaRota.push_back(rota[i]);
+	}
+	for(int i = fim; i > ini; i--){
+		novaRota.push_back(rota[i]);
+	}
+	for(int i = fim + 1; i < rota.size(); i++){
+		novaRota.push_back(rota[i]);
+	}
+
+	Instance nova = *this;
+	nova.rota = novaRota;
+
+	return nova;
+}
+
+Instance Instance::apply2opt(bool &melhora){
+	melhora = false;
+	rota.erase(rota.begin() + (rota.size() - 1));
     double value = 0, atual, melhor;
     pair<int, int> best;
     int i1, i2, j1, j2;
@@ -63,12 +85,13 @@ Instance Instance::localSearch(){
                 best.second = j;
             }
         }
-    }
+	}
+	
+	rota.push_back(rota[0]);
 
     vector<Cidade> novaRota;
 
     if(best.first != -1 && best.second != -1){
-        cout << "Trocou " << best.first << " " << best.second << endl;
         for(int i = 0; i <= best.first; i++){
             novaRota.push_back(rota[i]);
         }
@@ -79,10 +102,145 @@ Instance Instance::localSearch(){
             novaRota.push_back(rota[i]);
         }
     }
+	Instance nova(*this);
+	if(novaRota.size() != 0){
+		melhora = true;
+		nova.rota = novaRota;
+	}
 
-    rota = novaRota;
 
-    return anterior;
+    return nova;
+}
+
+Instance Instance::localSearch(double & bestValue){
+	double atualValue;
+	int pior = 0;
+	incluirPassageiros();
+
+	bestValue = getValue();
+
+	Instance atual = *this;
+	Instance nova = atual;
+
+	bool improve2opt;
+
+	//cout << "Valor Inicial: " << bestValue << endl;
+	//nova.printRota();
+	do{
+		nova = atual.apply2opt(improve2opt);
+		nova.incluirPassageiros();
+		//cout << "NOVA ROTA" << endl;
+		//nova.printRota();
+		atualValue = nova.getValue();
+
+		if(atualValue < bestValue){
+			//cout << "Melhora para " << atualValue << endl;
+			bestValue = atualValue;
+			pior = 0;
+			atual = nova;
+		} else {
+			pior++;
+		}
+
+		if(pior == 10){
+			break;
+		} 
+
+	}while(true);
+ 
+	return atual;
+}
+
+Instance Instance::localSearchRef(double &bestValue){
+	double atualValue, bestLocal;
+	int pior = 0;
+	incluirPassageiros();
+
+	bestValue = getValue();
+	bestLocal = bestValue;
+
+	Instance atual = *this;
+	Instance nova = atual;
+	Instance melhorLocal = atual;
+
+	bool improve2opt;
+
+	//cout << "Valor Inicial: " << bestValue << endl;
+	//nova.printRota();
+	int i2, j2;
+	do{
+		for(int i = 0; i < rota.size() - 4; i++){
+			for(int j = i + 2; j < rota.size() - 2; j++){
+				nova = atual.__switch(i, j);
+				nova.incluirPassageiros();
+				atualValue = nova.getValue();
+				if(atualValue < bestLocal){
+					//cout << "Melhora para " << atualValue << endl;
+					bestLocal = atualValue;
+					melhorLocal = nova;
+				}
+			}
+		}
+
+		if(bestLocal < bestValue){
+			bestValue = bestLocal;
+			pior = 0;
+			atual = melhorLocal;
+		} else {
+			pior++;
+		}
+
+		if(pior == 10){
+			break;
+		} 
+
+	}while(true);
+ 
+	return atual;
+}
+
+Instance Instance::GRASP(double &bestValue){
+	//cout << "INICIEI GRASP " << endl;
+	//printRota();
+	incluirPassageiros();
+	Instance melhor = *this;
+	double atualValue;
+	bestValue = getValue();
+	for(int i = 0; i < 100; i++){
+		Instance base;
+		base = base.localSearch(atualValue);
+		//cout << "GRAPS " << i << "(" << bestValue << ")" << endl;
+		if(atualValue < bestValue){
+			//cout << " ----- MELHORA GLOBAL: " << bestValue << " => " << atualValue;
+			bestValue = atualValue;
+			melhor = base;
+		}
+		//cout << endl;
+	}
+
+	return melhor;
+}
+
+Instance Instance::GRASPRef(double &bestValue){
+	//cout << "INICIEI GRASPREF" << endl << endl;
+	//printRota();
+	incluirPassageiros();
+	Instance melhor = *this;
+	double atualValue;
+	bestValue = getValue();
+	for(int i = 0; i < 100; i++){
+		Instance base;
+		base = base.localSearchRef(atualValue);
+		//cout << "GRAPS " << i << "(" << bestValue << ")" << endl;
+		if(atualValue < bestValue){
+			//cout << " ----- MELHORA GLOBAL: " << bestValue << " => " << atualValue;
+			bestValue = atualValue;
+			melhor = base;
+		}
+		//cout << endl;
+	}
+
+	return melhor;
 }
 
 bool* Instance::darwin() {
@@ -113,42 +271,69 @@ bool* Instance::darwin() {
 		l.push_back(p);	
 	}
 	
-	for(int i = 0; i < numPass; i++) {
+/* 	for(int i = 0; i < numPass; i++) {
 		cout << candidatos[i] << " ";
-	}
+	} */
 	
 	return candidatos;
 }
 
-void Instance::incluirPassageiros() {
+double Instance::incluirPassageiros(int index) {
+	double soma = 0;
 	bool * candidatos = darwin();
-	vector<Passageiro> auxiliar = passageiros;
 	vector<Passageiro> carro;
-	int index = 0;
-	incluirPassageiros(candidatos,&auxiliar, index, &carro);
-	delete candidatos;
+	for(; index < rota.size(); index++){
+		carro.clear();
+		soma = 0;
+		if(incluirPassageiros(candidatos, index, carro, soma)){
+			break;
+		}
+		rota[index].reset();
+	}
+	
+	delete [] candidatos;
+
+	return soma;
 }
 
-void Instance::incluirPassageiros(bool * candidatos, vector<Passageiro> * auxiliar, int index, vector<Passageiro> * carro) {
+bool Instance::incluirPassageiros(bool * candidatos, int index, vector<Passageiro> & carro, double &soma) {
+	double custo = 0;
 	if(index == rota.size()) {
-		return;
+		return true;
 	}
-	for(int i = 0; i < tripulacao.size(); i++) {
-		tripulacao[i].setTarifa(tripulacao[i].getTarifa() - (custoArestas[rota[index].getId()][rota[index-1].getId()].first)/tripulacao.size());
-		if(tripulacao[i].getTarifa()<0) {
-			reconstruirTripulacao(index, tripulacao[i].getEmbarque());
-			incluirPassageiros(candidatos, auxiliar, tripulacao[i].getEmbarque()+1);
-			return;
+
+	rota[index].reset();
+	if(index != 0){
+		custo = (custoArestas[rota[index - 1].getId()][rota[index].getId()].first);
+		if(carro.size() == lotacao){
+			custo *= (1 - (custoArestas[rota[index - 1].getId()][rota[index].getId()].second));
 		}
-		if(tripulacao[i].getDesembarque() == rota[index].getId()) {
-			tripulacao.erase(tripulacao.begin() + i);
+		if(carro.size() > 0){
+			custo /= carro.size();
 		}
 	}
-	if (candidatos[cidades[index].getPassageiro()] && carro.size() < lotacao) {
-		carro.push_back(auxiliar[cidades[index].getPassageiro()]);
-		lotacao++;
+
+	soma += custo;
+
+
+	for(int i = carro.size() - 1; i >= 0; i--) {
+		carro[i].setTarifa(carro[i].getTarifa() - custo);
+		if(carro[i].getTarifa() < 0) {
+			soma = 0;
+			return false;
+		}
+		if(carro[i].getDesembarque() == rota[index].getId()) {
+			carro.erase(carro.begin() + i);
+			rota[index].saiPass();
+		}
 	}
-	incluirPassageiros(candidatos, auxiliar, index+1);
+
+	if (candidatos[rota[index].getPassageiro()] && carro.size() < lotacao) {
+		rota[index].pegaPassageiro();
+		carro.push_back(passageiros[rota[index].getPassageiro()]);
+	}
+	return incluirPassageiros(candidatos, index+1, carro, soma);
+	
 }
 
 void Instance::reconstruirTripulacao(int pontoDeErro, int pontoDeReconstrucao) {
@@ -208,4 +393,83 @@ void Instance::printBase(){
     }
 
     cout << "Espero que não tenha dado merda" << endl;
+}
+
+double Instance::getValue(){
+	double soma = 0;
+	double custo = 0;
+	vector<Passageiro> carro;
+	if(rota[0].embarcou()){
+		carro.push_back(passageiros[rota[0].getPassageiro()]);
+	}
+
+	for(int index = 1; index < rota.size(); index++){
+		custo = (custoArestas[rota[index - 1].getId()][rota[index].getId()].first);
+		if(carro.size() == lotacao){
+			custo *= (1 - custoArestas[rota[index - 1].getId()][rota[index].getId()].second);
+		}
+
+		if(carro.size() != 0){
+			custo /= carro.size();
+		}
+
+		soma += custo;
+		for(int i = carro.size() - 1; i >= 0; i--) {
+			carro[i].setTarifa(carro[i].getTarifa() - custo);
+			if(carro[i].getDesembarque() == rota[index].getId()) {
+				carro.erase(carro.begin() + i);
+			}
+		}
+		if (rota[index].embarcou()) {
+			carro.push_back(passageiros[rota[index].getPassageiro()]);
+		}
+	}
+
+	return soma;
+}
+
+double Instance::printRotaEmbarques(vector<Passageiro> &historico){
+	double soma = 0;
+	double custo = 0;
+	vector<Passageiro> carro;
+	cout << "----------------------------------------------" << endl;
+	cout << "FOI PARA CIDADE " << rota[0].getId() << endl;
+	cout << "    Tamanho do carro: " << carro.size() << endl;
+	cout << "    Todos pagaram: " << custo << endl;
+	cout << "    DESEMBARQUES:" << endl;
+	cout << "    EMBARQUES:" << endl; 
+	if(rota[0].embarcou()){
+		cout << "        Passageiro: " << rota[0].getPassageiro() + 1 << " entrou." << endl;
+		carro.push_back(passageiros[rota[0].getPassageiro()]);
+	}
+
+	for(int index = 1; index < rota.size(); index++){
+		custo = (custoArestas[rota[index - 1].getId()][rota[index].getId()].first);
+		cout << "----------------------------------------------" << endl;
+		cout << "FOI PARA CIDADE " << rota[index].getId() << endl;
+		cout << "    Tamanho do carro: " << carro.size() << endl;
+		if(carro.size() != 0){
+			custo /= carro.size();
+		}
+		cout << "    Todos pagaram: " << custo << endl;
+		soma += custo;
+		cout << "    DESEMBARQUES:" << endl;
+		for(int i = carro.size() - 1; i >= 0; i--) {
+			carro[i].setTarifa(carro[i].getTarifa() - custo);
+			if(carro[i].getDesembarque() == rota[index].getId()) {
+				cout << "        " << carro[i].getId() << " saiu." << endl;
+				historico.push_back(carro[i]);
+				carro.erase(carro.begin() + i);
+			}
+		}
+		cout << "    EMBARQUES:" << endl;
+		if (rota[index].embarcou()) {
+			cout << "        Passageiro: " << rota[index].getPassageiro() + 1 << " entrou." << endl; 
+			carro.push_back(passageiros[rota[index].getPassageiro()]);
+		}
+	}
+
+	soma += custoArestas[rota[rota.size() - 1].getId()][0].first;
+
+	return soma;
 }

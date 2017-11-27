@@ -2,7 +2,6 @@
 
 Instance MetaParser::getInstance(string &name){
     fstream arq(name.c_str());
-
     if(arq.fail()){
         cout << "Impossível abrir arquivo " << name << endl;
         throw 1;
@@ -38,12 +37,13 @@ Instance MetaParser::getInstance(string &name){
     }
 
     for(int i = 0; i < Instance::vertices; i++){
-        Instance::cidades.push_back(Cidade(i));
+        Cidade aux(i);
+        Instance::cidades.push_back(aux);
     }
 
     for(int i = 0; i < Instance::numPass; i++){
         arq >> desc >> v1 >> v2;
-        Instance::passageiros.push_back(Passageiro(i+1, desc, v1, v2));
+        Instance::passageiros.push_back(Passageiro(i + 1, desc, v1, v2));
         Instance::cidades[v1].setPassageiro(i);
     }
 

@@ -29,6 +29,8 @@ using std::pair;
 
 #include "Dupla.hpp"
 
+#define __MIN(A, B) A < B ? A : B
+
 class MetaParser;
 
 class Instance{
@@ -39,19 +41,33 @@ class Instance{
         
         Instance();
 
-        Instance localSearch();
+        Instance apply2opt(bool &);
 		
 		bool* darwin();
 		
-		void incluirPassageiros();
+		double incluirPassageiros(int = 0);
 		
-		void incluirPassageiros(bool*, vector<Passageiro> *, int);
+		bool incluirPassageiros(bool*, int, vector<Passageiro> &, double &);
 
         static void printBase();
         
         void printRota();
 		
         void printTripulacao();
+
+        double printRotaEmbarques(vector<Passageiro> &);
+
+        double getValue();
+
+        Instance localSearch(double &);
+
+        Instance localSearchRef(double &);
+
+        Instance GRASP(double &);
+
+        Instance GRASPRef(double &);
+
+        static int getLotacao() { return lotacao; };
 
 
     private:
@@ -76,7 +92,10 @@ class Instance{
 
         static vector<Passageiro> passageiros;
 		
-		void reconstruirTripulacao(int, int);
+        void reconstruirTripulacao(int, int);
+
+        Instance __switch(int, int);
+        
 
 };
 
