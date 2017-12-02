@@ -14,7 +14,7 @@ int main(int argc, char * argv[]){
     string name, comando;
 
     while(arq >> name){
-        comando = "Classes/Main " + name;
+        comando = "Classes/Teste " + name;
         system(comando.c_str());
     }
 

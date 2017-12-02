@@ -22,6 +22,7 @@ using std::string;
 
 #include <utility>
 using std::pair;
+using std::make_pair;
 
 #include "Cidade.hpp"
 
@@ -57,6 +58,8 @@ class Instance{
 
         double printRotaEmbarques(vector<Passageiro> &);
 
+        double getValue(bool &);
+
         double getValue();
 
         Instance localSearch(double &);
@@ -67,7 +70,19 @@ class Instance{
 
         Instance GRASPRef(double &);
 
+        Instance removePass(int);
+
+        Instance improvePass(double &);
+
+        Instance incluiPass(int, int, double &, bool *);
+
         static int getLotacao() { return lotacao; };
+
+        Instance refinaSolucao(double &);
+
+        Instance localSearchPass(double &);
+
+        Instance melhorDoMelhorDoMundo(double &);
 
 
     private:
@@ -95,6 +110,13 @@ class Instance{
         void reconstruirTripulacao(int, int);
 
         Instance __switch(int, int);
+
+        Instance __switch(int, int, double &);
+
+        Instance pegaPassageiro(int, double &);
+
+        Instance revert();
+
         
 
 };
